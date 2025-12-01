@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 16px;
+    }
+    div.absolute-position-spans span {
+      position: absolute;
+    }
+  </style>
+</head>
+
+<div>
+  <span>1</span>
+  <span>2</span>
+  <span>3</span>
+  <span>...in spans with default positions</span>
+</div>
+
+<div class="absolute-position-spans">
+  <span style="left:10px;top:50px">1</span>
+  <span style="left:40px;top:50px">2</span>
+  <span style="left:70px;top:50px">3</span>
+  <span style="left:100px;top:50px">...in spans with absolute positions</span>
+</div>
+
+<!-- clipboard text with chromium 137.0.7151.119:
+1 2 3 ...in spans with default positions
+123...in spans with absolute positions
+-->
+
+<div style="position: absolute; left: 10px; top: 100px">
+  <hr>
+  <div>reproduce: hit Control+F to find the text "1 2 3"</div>
+  <div>actual: the text is found only in spans with default positions, but not in spans with absolute positions</div>
+  <div>expected: the text should be found in both: in spans with default positions, and in spans with absolute positions</div>
+  <hr>
+  <div>reproduce: select and copy text to clipboard from spans with absolute positions</div>
+  <div>actual: the clipboard content is "123...in spans with absolute positions"</div>
+  <div>expected: the clipboard content should be "1 2 3 ...in spans with absolute positions"
+  </div>
+  <hr>
+  <div>reproduce: triple-click spans with absolute positions</div>
+  <div>actual: only one span is slected</div>
+  <div>expected: all spans in the parent div should be selected</div>
+  <hr>
+  <div>compare: <a href="test.svg">test.svg</a></div>
+  <div>source: <a href="https://github.com/milahu/chromium-discuss-text-search-absolute-position-spans">github.com</a></div>
+</div>
