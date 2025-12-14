@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+
+<!-- no <br> between lines -->
+
+<head>
+  <style>
+    body {
+      /* simplify calculations of text positions. char_width = 0.6 * char_height */
+      /* NOTE for cross-platform consistent font-width, we would need to define a font-face with a font file (woff2) */
+      /* font-family: Courier; # aspect: 0.600095 = 1229 / 2048 = 0.60009765625 */
+      /* font-family: monospace; # aspect: 0.60205 = 1233 / 2048 = 0.60205078125 */
+      font-family: monospace;
+      /*
+      font-family: Courier;
+      */
+      /* NOTE the text-selection-height in chrome is 116.66666666666666% with extra space above the text */
+      font-size: 100px;
+      line-height: 100%;
+
+      /* prevent line-wrap on 500% zoom */
+      width: 1200%;
+
+      /* measure font-width of 500 chars */
+      /* width: 10000%; */
+
+      margin: 0;
+    }
+
+    div.default-position-spans span {
+      position: default;
+    }
+
+    div.relative-position-spans span {
+      position: relative;
+      word-break: keep-all;
+      white-space: pre;
+    }
+
+    div.absolute-position-spans span {
+      position: absolute;
+      white-space: pre;
+    }
+
+    /* NOTE this only works in light mode */
+    /* FIXME this has no effect in dark mode */
+    /*
+    div.relative-position-spans ::selection {
+      color: black;
+      background: rgba(0, 0, 255, 0.5);
+    }
+    @media (prefers-color-scheme: dark) {
+      div.relative-position-spans ::selection {
+        color: black;
+        background: rgba(0, 0, 255, 0.5);
+        background: yellow;
+      }
+    }
+    */
+
+    div.frame {
+      position: absolute;
+      height: 4px;
+      opacity: 0.5;
+      opacity: 1;
+      background: red;
+    }
+    div.frame:hover {
+      opacity: 1;
+    }
+
+    div#footer > div {
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+
+<!--
+  # width
+  len("1") = 1
+  1 * (1233 / 2048) * 100 = 60.205078125 # px
+
+  # left
+  len("") = 0
+-->
+<div class="frame" style="left:0px;top:100px;width:60.205078125px"></div>
+
+<!--
+  # width
+  len("2") = 1
+  1 * (1233 / 2048) * 100 = 60.205078125 # px
+
+  # left
+  len("1 ") = 2
+  2 * (1233 / 2048) * 100 = 120.41015625 # px
+-->
+<div class="frame" style="left:120.41015625px;top:100px;width:60.205078125px"></div>
+
+<!--
+  # width
+  len("3") = 1
+  1 * (1233 / 2048) * 100 = 60.205078125 # px
+
+  # left
+  len("1 2 ") = 4
+  4 * (1233 / 2048) * 100 = 240.8203125 # px
+-->
+<div class="frame" style="left:240.8203125px;top:100px;width:60.205078125px"></div>
+
+<!--
+  # width
+  len("...in spans with default positions") = 34
+  34 * (1233 / 2048) * 100 = 2046.97265625
+
+  # left
+  len("1 2 3 ") = 6
+  6 * (1233 / 2048) * 100 = 361.23046875
+-->
+<div class="frame" style="left:361.23046875px;top:100px;width:2046.97265625px"></div>
+
+<!--
+  # width
+  len("and one more span") = 17
+  17 * (1233 / 2048) * 100 = 1023.486328125
+
+  # left
+  len("1 2 3 ...in spans with default positions ") = 41
+  41 * (1233 / 2048) * 100 = 2468.408203125
+-->
+<div class="frame" style="left:2468.408203125px;top:100px;width:1023.486328125px"></div>
+
+<!--
+  measure font-width of 500 chars
+  https://stackoverflow.com/questions/19113725/what-dependency-between-font-size-and-width-of-char-in-monospace-font
+
+  # width
+  len(" ") = 1
+  100 * 0.602 * 1 = 60.2
+
+  # left
+  len(s) = 500
+  100 * 0.602 * 500 = 30100 # px
+  30102.5 / 500 / 100 = 0.60205 # "font-family: monospace" in chrome on linux
+
+  1 * 0.6 * 500 = 300 # em
+  301.025 / 500 = 0.60205  
+  1 * 0.60205 * 500 = 301.025 # em
+
+  30004.75 / 500 / 100 = 0.600095 # "font-family: Courier" in chrome on linux
+
+  (1229 / 2048) * 500 = 300.048828125 # em # "font-family: Courier" in chrome on linux
+
+  (1233 / 2048) * 500 = 301.025390625 # em # "font-family: monospace" in chrome on linux
+-->
+<div class="frame" style="left:301.025390625em;top:100px;width:60.2px"></div>
+
+<div class="default-position-spans">
+  <span>1</span>
+  <span>2</span>
+  <span>3</span>
+  <span>...in spans with default positions</span>
+  <span>and one more span</span>
+  <!-- measure font-width of 500 chars -->
+  <!--
+  <span>0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</span>
+  <span>0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</span>
+  <span>0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</span>
+  <span>0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789</span>
+  <span>0123456789012345678901234567890123456Z</span>
+  -->
+  <!-- len: 501 chars -->
+</div>
+
+<!--
+1 * (1233 / 2048) * 100 = 60.205078125
+2 * (1233 / 2048) * 100 = 120.41015625
+3 * (1233 / 2048) * 100 = 180.615234375
+5 * (1233 / 2048) * 100 = 301.025390625
+6 * (1233 / 2048) * 100 = 361.23046875
+-->
+<div class="relative-position-spans" style="margin-top: 1em">
+  <span style="left:0;top:0">1</span>
+  <span style="left:60.205078125px;top:0">2</span>
+  <span style="left:120.41015625px;top:0">3</span>
+  <!-- len("1 2 3 ") = 6 # 6 * (1233 / 2048) * 100 = 361.23046875 -->
+  <span style="left:-361.23046875px;top:100px">...in spans with relative positions</span>
+  <!-- len("1 2 3 ...in spans with relative positions ") = 42 # 42 * (1233 / 2048) * 100 = 2528.61328125 -->
+  <span style="left:-2528.61328125px;top:200px">and one more span</span>
+</div>
+
+<!--
+1 * (1233 / 2048) * 100 = 60.205078125
+2 * (1233 / 2048) * 100 = 120.41015625
+3 * (1233 / 2048) * 100 = 180.615234375
+5 * (1233 / 2048) * 100 = 301.025390625
+6 * (1233 / 2048) * 100 = 361.23046875
+-->
+<div class="absolute-position-spans">
+  <span style="left:0;top:600px">1</span>
+  <span style="left:180.615234375px;top:600px">2</span>
+  <span style="left:361.23046875px;top:600px">3</span>
+  <span style="left:0;top:700px">...in spans with absolute positions</span>
+  <!-- NOTE the text-selection-height in chrome is 116.66666666666666% with extra space above the text -->
+  <span style="left:0;top:816.66666666666666px">and one more span</span>
+</div>
+
+<!-- clipboard text with chromium 137.0.7151.119:
+1 2 3 ...in spans with default positions and one more span
+1 2 3 ...in spans with relative positions and one more span
+123...in spans with absolute positionsand one more span
+-->
+
+<!-- clipboard text with librewolf 139.0.4-1:
+ 1 2 3 ...in spans with default positions and one more span
+1 2 3 ...in spans with relative positions and one more span
+1 2 3 ...in spans with absolute positions and one more span
+-->
+
+<div id="footer" style="margin-top: 700px; width: 90vw; font-size: 20px; line-height: 25px">
+  <h2>issue 1</h2>
+  <div>reproduce: hit Control+F to find the text "1 2 3 ..."</div>
+  <div>actual: the text is found only in spans with default positions and relative positions, but not in spans with absolute positions</div>
+  <div>expected: the text should be found in both: in spans with default positions, relative positions, absolute positions</div>
+  <h2>issue 2</h2>
+  <div>reproduce: select and copy text to clipboard from spans with absolute positions</div>
+  <div>actual: the clipboard content is "123...in spans with absolute positionsand one more span"</div>
+  <div>expected: the clipboard content should be "1 2 3 ...in spans with absolute positions and one more span"</div>
+  <h2>issue 3</h2>
+  <div>reproduce: triple-click the "1 2 3" spans with absolute positions</div>
+  <div>actual: only one span is slected</div>
+  <div>expected: all spans of the parent div should be selected, as with default positions or relative positions</div>
+  <h2>issue 4</h2>
+  <div>reproduce: select text in spans with relative positions</div>
+  <div>actual: text-selection highlight has too much height above the selected text in spans with relative positions.
+    the text-selection highlight starts at the relative position y=0</div>
+  <div>expected: text-selection highlight should have the same height as with selected text in spans with absolute positions</div>
+  <h2>related</h2>
+  <div>compare: <a href="test.svg">test.svg</a></div>
+  <div>source: <a href="https://github.com/milahu/chromium-discuss-text-search-absolute-position-spans">github.com</a></div>
+</div>
